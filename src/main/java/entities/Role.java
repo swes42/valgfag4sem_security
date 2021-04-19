@@ -9,14 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- *
- * @author Plaul
- */
+
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
@@ -28,7 +26,16 @@ public class Role implements Serializable {
     @Column(name = "role_name", length = 20)
     private String roleName;
     
-    @ManyToMany(mappedBy = "roleList")
+    /*
+    Udkommenteret ManyToMany, hvis vi beslutter at
+    én rolle godt kan være tildelt mange brugere. 
+    Dvs. OneToMany, istedet for den nuværende
+    ManyToMany.
+    */
+    
+    
+    //@ManyToMany(mappedBy = "roleList")
+    @OneToMany(mappedBy = "roleList")
     private List<User> userList;
 
     public Role() {
