@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
+import entities.Role;
 import security.errorhandling.AuthenticationException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -82,9 +83,9 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
      String roles = signedJWT.getJWTClaimsSet().getClaim("roles").toString();
      String username = signedJWT.getJWTClaimsSet().getClaim("username").toString();
      
-     String[] rolesArray = roles.split(",");
+//     String[] rolesArray = roles.split(",");
      
-     return new UserPrincipal(username, rolesArray);
+     return new UserPrincipal(username, roles);
 //     return new UserPrincipal(username, roles);
    } else {
      throw new JOSEException("User could not be extracted from token");

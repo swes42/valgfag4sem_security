@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import entities.User;
+import entities.Role;
 import errorhandling.API_Exception;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -40,10 +41,12 @@ public class LoginEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String jsonString) throws AuthenticationException, API_Exception {
         String username;
+        String role;
         String password;
         try {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             username = json.get("username").getAsString();
+            role = json.get("role").getAsString();
             password = json.get("password").getAsString();
         } catch (Exception e) {
            throw new API_Exception("Malformed JSON Suplied",400,e);
@@ -51,7 +54,7 @@ public class LoginEndpoint {
 
         try {
             User user = USER_FACADE.getVeryfiedUser(username, password);
-            String token = createToken(username, user.getRolesAsStrings());
+            String token = createToken(username, role);
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
             responseJson.addProperty("token", token);
@@ -66,22 +69,27 @@ public class LoginEndpoint {
         throw new AuthenticationException("Invalid username or password! Please try again");
     }
 
-    private String createToken(String userName, List<String> roles) throws JOSEException {
+    private String createToken(String userName, String roles) throws JOSEException {
 
-        StringBuilder res = new StringBuilder();
-        for (String string : roles) {
-            res.append(string);
-            res.append(",");
-        }
-        String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
-        String issuer = "semesterstartcode-dat3";
+          // Mener det jeg har udkommenteret her, vil være overflydigt når 
+          // nu roles bare er én string og ikke en liste af strings. 
+          // Vil ikke slette det før i har godkendt. -Malthe
+//        StringBuilder res = new StringBuilder();
+//        for (String string : roles) {
+//            res.append(string);
+//            res.append(",");
+//        }
+//        String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
+
+//        String issuer = "semesterstartcode-dat3";
+        String issuer = "4sem_security";
 
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(userName)
                 .claim("username", userName)
-                .claim("roles", rolesAsString)
+                .claim("roles", roles)
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
