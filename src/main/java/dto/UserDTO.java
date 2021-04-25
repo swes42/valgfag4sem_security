@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dto;
 
 import entities.User;
@@ -13,12 +9,9 @@ import entities.User;
  */
 public class UserDTO {
     
-    /*mulige fields, men slet ikke endeligt.
-    Det var blot for at komme igang med noget <3
-    */
     private String username;
     private String password;
-    //Kunne det ikke være ekstra sikkert med nedenstående field?
+    //Denne field er jeg usikker på, men tanken var der.
     private String prePassword; 
     private String role;
     private String email;

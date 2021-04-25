@@ -20,17 +20,19 @@ public class SetupTestUsers {
     // Also, either delete this file, when users are created or rename and add to .gitignore
     // Whatever you do DO NOT COMMIT and PUSH with the real passwords
 
-    User user = new User("user", "test@g.com", "test");
-    User admin = new User("admin", "test", "test");
-    User both = new User("user_admin", "test", "test");
+    User user = new User("testuser2@email.com", "testuser2", "test");
+    User admin = new User("testadmin2@email.com", "testadmin2", "test");
+    //User both = new User("user_admin", "test", "test");
 
-    if(admin.getUserPass().equals("test")||user.getUserPass().equals("test")||both.getUserPass().equals("test"))
+    //linje 29 kopieret til linje 28, hvor both er slettet fra linjen.
+    if(admin.getUserPass().equals("test")||user.getUserPass().equals("test"))
+    //if(admin.getUserPass().equals("test")||user.getUserPass().equals("test")||both.getUserPass().equals("test"))
       throw new UnsupportedOperationException("You have not changed the passwords");
 
     em.getTransaction().begin();
-    Role userRole = new Role("user");
-    Role adminRole = new Role("admin");
-    //user.addRole(userRole);
+    Role userRole = new Role("user2");
+    Role adminRole = new Role("admin2");
+    //user.getRole(adminRole);
     //admin.addRole(adminRole);
     //both.addRole(userRole);
     //both.addRole(adminRole);
@@ -38,7 +40,7 @@ public class SetupTestUsers {
     em.persist(adminRole);
     em.persist(user);
     em.persist(admin);
-    em.persist(both);
+    //em.persist(both);
     em.getTransaction().commit();
     System.out.println("PW: " + user.getUserPass());
     System.out.println("Testing user with OK password: " + user.verifyPassword("test"));

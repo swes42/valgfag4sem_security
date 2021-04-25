@@ -3,21 +3,19 @@ package facades;
 import dto.UserDTO;
 import entities.Role;
 import entities.User;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import security.JWTAuthenticationFilter;
 import security.errorhandling.AuthenticationException;
 
-/*
-Nedenstående linjer som har // er linjer jeg har tilføjet
-*/
 public class UserFacade {
 
     private static EntityManagerFactory emf;
     private static UserFacade instance;
-    //tilføjet
-    private static JWTAuthenticationFilter JWT;
 
     private UserFacade() {
     }
@@ -45,51 +43,70 @@ public class UserFacade {
         return user;
     }
     
-    /*
-    Metoder som jeg tænker vi skal have med..
+    public UserDTO getUser(String email) throws AuthenticationException {
+        EntityManager em = emf.createEntityManager();
+        User user = em.find(User.class, email);
+        
+        if(user == null) {
+                throw new AuthenticationException("User could not be found");
+        }
+        return new UserDTO(user);
+    }
     
-    //public void validationPass(String userPass) throws ? {} 
-    
-    //public void addRoles(EntityManager em) {}
-
-    //private void checkUserExists(User user, EntityManager em) throw ? {}
-    
-    //private void checkUserNameExists(String username, EntityManager em) throws? {}
-    
-    //public UserDTO editUser(UserDTO userdto) throws? {}
-    
-    //public UserDTO deleteUser(String email?){}
-    
-    //public UserDTO getUser(String email?) {}
-    
-    
-    
-    //
-    
-    */
+    public List<UserDTO> getAll(){
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery query = em.createQuery("SELECT u from User u", User.class);
+            List<User> userList = query.getResultList();
+            List<UserDTO> userDTOlist = new ArrayList<>();
+            
+            for (User user : userList) {
+                userDTOlist.add(new UserDTO(user));
+            }
+            return userDTOlist;
+        } finally {
+            em.close();
+        }
+    }
     
     public UserDTO addUser(UserDTO userDTO) throws AuthenticationException {
-        
-        //validationPass(userDTO.getPassword());
-        
         EntityManager em = emf.createEntityManager();
-        User user = new User (userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword());
+        User user = new User (userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword());
         
-        //addRoles(em);
-        //user.setRole(getUserRole(em));
-        //checkExisting(user, em);
+        //kalder metode som er lavet i klassen.
+        addStarterRole(em);
+        //kalder metode der er lavet i klassen.
+        user.setRole(getUserRole(em));
+        
         
         try{
             em.getTransaction().begin();
             em.persist(user);
             em.getTransaction().commit();
-            //tilføjet return statement, men kunne ikke udkommentere for så ville den ikke compile.
             return new UserDTO(user);
             
         } finally {
             em.close();
         }
     }
+    
+    //Beklager manglede kreativitet mht. metode-navn haha
+    //Må jeg ikke gerne have entity med som parameteren?
+    public void addStarterRole(EntityManager em){
+        Query q = em.createQuery("SELECT r FROM Role r");
+        
+        if (q.getResultList().isEmpty()) {
+            em.getTransaction().begin();
+            em.persist(new Role("user"));
+            em.persist(new Role("admin"));
+            em.getTransaction().commit();
+        }
+    }
+    
+    public Role getUserRole(EntityManager em) {
+        return em.find(Role.class, "user");
+    }
+    
     
     public UserDTO deleteUser(String email) {
         EntityManager em = emf.createEntityManager();
@@ -106,17 +123,4 @@ public class UserFacade {
                 em.close();
             }
     }
-    
-    //Skal ændres tror jeg. Til noget med at lave en liste userDTOlist??
-    //Den skal bruges i UserResource
-    public List<User> getAllUsers(){
-        EntityManager em = emf.createEntityManager();
-        try {
-            List<User> userList = em.createQuery("SELECT u from User u").getResultList();
-            return userList;
-        } finally {
-            em.close();
-        }
-    }
-
 }

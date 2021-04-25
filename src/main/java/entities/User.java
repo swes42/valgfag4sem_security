@@ -1,8 +1,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -18,27 +15,21 @@ import javax.validation.constraints.Size;
 import org.mindrot.jbcrypt.BCrypt;
 import security.errorhandling.AuthenticationException;
 
-/*
-Hi guys. 
-Jeg har kun udkommenteret det jeg har rettet, 
-istedet for at slette, i tilfælde af det skulle være
-helt forkert.*/
-
-
 @Entity
-@Table(name = "users")
+//førhen users, nu user
+@Table(name = "user")
 public class User implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  @Id
+  
   @Basic(optional = false)
   @NotNull
   @Column(name = "user_name", length = 25)
   private String userName;
   
-  //Jeg er i tvivl om vi skal gøre email til id.
-  //Indtil videre har jeg bare sat username som id.
-  //Email kolonne tilføjet.
+  @Id
+  @Basic(optional = false)
+  @NotNull
   @Column(name = "email", length = 25)
   private String email;
   
@@ -48,65 +39,29 @@ public class User implements Serializable {
   @Column(name = "user_pass")
   private String userPass;
   
-  @JoinTable(name = "user_roles", joinColumns = {
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+  @JoinTable(name = "user_role", joinColumns = {
+    @JoinColumn(name = "email", referencedColumnName = "email")}, inverseJoinColumns = {
     @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
   
-  //Ny relation - kommentar længere nede.
   @ManyToOne (cascade = CascadeType.PERSIST)
   private Role role;
   
   
-  /* 
-  
-  Jeg tænker ikke at en bruger skal kunne have mange 
-  roller. For at "styrer" sikkerheden, skal udefra
-  kunder kun kunne tildeles "user" rollen.
-  
-  Jeg ville umiddelbart mene at vi skal lave det om,
-  til ManyToOne - så hver bruger kun får én rolle. 
-  
-  således:
-  
-  @ManyToOne (cascade = CascadeType.PERSIST)
-  private Role role;
-  
-  Men dette er blot mine tanker <3 
-  Lad mig høre hvad I tænker.
-  
-  
-  @ManyToMany
-  private List<Role> roleList = new ArrayList<>(); 
-  
-
-  public List<String> getRolesAsStrings() {
-    if (roleList.isEmpty()) {
-      return null;
-    }
-    List<String> rolesAsStrings = new ArrayList<>();
-    roleList.forEach((role) -> {
-        rolesAsStrings.add(role.getRoleName());
-      });
-    return rolesAsStrings;
-  }*/
-
   public User() {}
 
    public boolean verifyPassword(String pw){
-        //return(pw.equals(userPass));
         return (BCrypt.checkpw(pw, this.userPass));
     }
 
-   //String email tilføjet som parameter
-  public User(String userName, String email, String userPass) {
-    this.userName = userName;
+  public User(String email, String userName, String userPass) {
+    
     this.email = email;
-    //this.userPass = userPass;
+    this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(12));
 
   }
   
-  //tilføj metode som kan ændre password
+ //hensigten med denne er at ændre kode. Men jeg ved ikke om det virker.
   public void modifyPass (String prePass, String postPass) throws AuthenticationException {
       if(BCrypt.checkpw(prePass, this.userPass)) {
           this.userPass = BCrypt.hashpw(postPass, BCrypt.gensalt(12));
@@ -140,29 +95,11 @@ public class User implements Serializable {
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(12));
 
   }
-
-  /* Slettes, hvis vi vælger at der ikke skal være
-  valget for at vælge rolle.
   
-  public List<Role> getRoleList() {
-    return roleList;
-  }
-
-  public void setRoleList(List<Role> roleList) {
-    this.roleList = roleList;
-  }
-
-  public void addRole(Role userRole) {
-    roleList.add(userRole);
-  }
-  */
-  
-  //tilføjet
   public Role getRole() {
       return role;
   }
   
-  //tilføjet
   public void setRole(Role role) {
       this.role = role;
   }

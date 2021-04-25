@@ -12,7 +12,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import facades.UserFacade;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import entities.User;
@@ -41,9 +40,11 @@ public class LoginEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String jsonString) throws AuthenticationException, API_Exception {
         JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-        String email;
-        String password;
-        try {
+        String email = json.get("email").getAsString();
+        String password = json.get("password").getAsString();
+        
+        
+       /* try {
             //JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
             email = json.get("email").getAsString();
             //role = json.get("role").getAsString();
@@ -51,12 +52,12 @@ public class LoginEndpoint {
         } catch (Exception e) {
            throw new API_Exception("Malformed JSON Suplied",400,e);
         }
-
+*/
         try {
             User user = USER_FACADE.getVeryfiedUser(email, password);
             String token = createToken(user, user.getRole());
             JsonObject responseJson = new JsonObject();
-            responseJson.addProperty("email", email);
+            //responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
             return Response.ok(new Gson().toJson(responseJson)).build();
 
@@ -70,8 +71,6 @@ public class LoginEndpoint {
     }
 
     private String createToken(User user, Role role) throws JOSEException {
-        System.out.println(user);
-        System.out.println(role);
           // Mener det jeg har udkommenteret her, vil være overflydigt når 
           // nu roles bare er én string og ikke en liste af strings. 
           // Vil ikke slette det før i har godkendt. -Malthe
@@ -89,8 +88,9 @@ public class LoginEndpoint {
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 //.subject(user.getUserName())
-                .claim("username", user.getUserName())
+                
                 .claim("email", user.getEmail())
+                .claim("username", user.getUserName())
                 .claim("role", role.getRoleName())
                 .claim("issuer", issuer)
                 .issueTime(date)

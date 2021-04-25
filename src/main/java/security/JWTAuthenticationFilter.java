@@ -4,7 +4,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
-import entities.Role;
 import security.errorhandling.AuthenticationException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -70,7 +69,7 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
    return false;
  }
 
- private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
+ public UserPrincipal getUserPrincipalFromTokenIfValid(String token)
          throws ParseException, JOSEException, AuthenticationException {
    SignedJWT signedJWT = SignedJWT.parse(token);
    //Is it a valid token (generated with our shared key)
@@ -80,7 +79,7 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
      if (new Date().getTime() > signedJWT.getJWTClaimsSet().getExpirationTime().getTime()) {
        throw new AuthenticationException("Your Token is no longer valid");
      }
-     String role = signedJWT.getJWTClaimsSet().getClaim("roles").toString();
+     String role = signedJWT.getJWTClaimsSet().getClaim("role").toString();
      String username = signedJWT.getJWTClaimsSet().getClaim("username").toString();
      String email = signedJWT.getJWTClaimsSet().getClaim("email").toString();
      
