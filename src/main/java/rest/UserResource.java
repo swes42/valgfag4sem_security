@@ -116,7 +116,7 @@ public class UserResource {
         List<UserDTO> userDTOlist = U_FACADE.getAllUsers();
         return GSON.toJson(userDTOlist);
     }*/
-
+    
     @GET
     @RolesAllowed("user")
     @Path("count")

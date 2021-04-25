@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
-//Disabled
+@Disabled
 public class LoginEndpointTest {
 
     private static final int SERVER_PORT = 7777;
@@ -60,6 +60,7 @@ public class LoginEndpointTest {
 
     // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
     //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
+    /*
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -89,7 +90,7 @@ public class LoginEndpointTest {
             em.close();
         }
     }
-
+*/
     //This is how we hold on to the token after login, similar to that a client must store the token somewhere
     private static String securityToken;
 

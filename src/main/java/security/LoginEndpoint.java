@@ -40,23 +40,23 @@ public class LoginEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String jsonString) throws AuthenticationException, API_Exception {
-        String username;
-        String role;
+        JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+        String email;
         String password;
         try {
-            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-            username = json.get("username").getAsString();
-            role = json.get("role").getAsString();
+            //JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+            email = json.get("email").getAsString();
+            //role = json.get("role").getAsString();
             password = json.get("password").getAsString();
         } catch (Exception e) {
            throw new API_Exception("Malformed JSON Suplied",400,e);
         }
 
         try {
-            User user = USER_FACADE.getVeryfiedUser(username, password);
-            String token = createToken(username, role);
+            User user = USER_FACADE.getVeryfiedUser(email, password);
+            String token = createToken(user, user.getRole());
             JsonObject responseJson = new JsonObject();
-            responseJson.addProperty("username", username);
+            responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
             return Response.ok(new Gson().toJson(responseJson)).build();
 
@@ -69,8 +69,9 @@ public class LoginEndpoint {
         throw new AuthenticationException("Invalid username or password! Please try again");
     }
 
-    private String createToken(String userName, String roles) throws JOSEException {
-
+    private String createToken(User user, Role role) throws JOSEException {
+        System.out.println(user);
+        System.out.println(role);
           // Mener det jeg har udkommenteret her, vil være overflydigt når 
           // nu roles bare er én string og ikke en liste af strings. 
           // Vil ikke slette det før i har godkendt. -Malthe
@@ -87,9 +88,10 @@ public class LoginEndpoint {
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(userName)
-                .claim("username", userName)
-                .claim("roles", roles)
+                //.subject(user.getUserName())
+                .claim("username", user.getUserName())
+                .claim("email", user.getEmail())
+                .claim("role", role.getRoleName())
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))

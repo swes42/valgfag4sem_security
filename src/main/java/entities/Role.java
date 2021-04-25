@@ -35,7 +35,7 @@ public class Role implements Serializable {
     
     
     //@ManyToMany(mappedBy = "roleList")
-    @OneToMany(mappedBy = "roleList")
+    @OneToMany(mappedBy = "role")
     private List<User> userList;
 
     public Role() {

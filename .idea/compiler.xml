@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="4sem_security" options="-endorseddirs C:\Users\soend\Documents\4.semester\Security\SemesterProjekt\target/endorsed" />
+      <module name="4sem_security" options="-endorseddirs &quot;C:\Users\miade\OneDrive\1 CBA - Datamatiker\4. semester\Security\Project\valgfag4sem_security\target/endorsed&quot;" />
     </option>
   </component>
 </project>
