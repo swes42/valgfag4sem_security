@@ -1,4 +1,4 @@
-[![Build Status](https://www.travis-ci.com/swes42/valgfag4sem_security.svg?branch=main)](https://www.travis-ci.com/swes42/valgfag4sem_security)
+[![Build Status](https://www.travis-ci.com/swes42/valgfag4sem_security.svg?branch=main)]
 
 *This project is meant as start code for projects and exercises given in Flow-1+2 at http://cphbusiness.dk in the Study Program "AP degree in Computer Science"*
 
