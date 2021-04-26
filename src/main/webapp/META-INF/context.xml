@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--<Context path="/jpareststarter"/>-->
-<Context path="/4sem_security">
+<Context path="/jpareststarter">
     
     
 <!--    <Resource name="jdbc/DATABASE1"
