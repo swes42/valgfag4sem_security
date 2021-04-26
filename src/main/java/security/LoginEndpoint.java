@@ -75,7 +75,7 @@ public class LoginEndpoint {
         }
         String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
         String issuer = "CoffeeRoom";
-
+        
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
