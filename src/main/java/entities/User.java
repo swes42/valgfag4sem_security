@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +23,11 @@ import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name = "users")
-@NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User")
+@NamedQueries({
+    @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"),
+    @NamedQuery(name = "User.getByUsername", query = "SELECT u FROM User u WHERE u.userName LIKE :userName"),
+    @NamedQuery(name = "User.getAllRows", query = "SELECT u from User u")
+})
 
 public class User implements Serializable {
 
@@ -59,6 +65,9 @@ public class User implements Serializable {
     return rolesAsStrings;
   }
 
+  @OneToMany(mappedBy = "user")
+  private List<Post> posts = new ArrayList();
+  
   public User() {}
 
    public boolean verifyPassword(String pw){
@@ -108,4 +117,14 @@ public class User implements Serializable {
         this.lastEdited = lastEdited;
     }
 
+    
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Post post) {
+        if (post != null){
+            posts.add(post);
+        }
+    }
 }
