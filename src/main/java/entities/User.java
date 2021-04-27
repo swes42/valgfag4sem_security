@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,16 +38,21 @@ public class User implements Serializable {
   @NotNull
   @Column(name = "user_name", length = 25)
   private String userName;
+  
   @Basic(optional = false)
   @NotNull
   @Size(min = 1, max = 50)
   @Column(name = "user_pass")
   private String userPass;
+  
   @JoinTable(name = "user_roles", joinColumns = {
   @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
   @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
-  @ManyToMany
+  
+  @ManyToMany 
   private List<Role> roleList = new ArrayList<>();
+  
+  
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "dateCreated")
   private java.util.Date dateCreated;
@@ -54,6 +60,8 @@ public class User implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "lastEdited")
   private java.util.Date lastEdited;
+  
+  
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
       return null;
@@ -65,7 +73,7 @@ public class User implements Serializable {
     return rolesAsStrings;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
   private List<Post> posts = new ArrayList();
   
   public User() {}

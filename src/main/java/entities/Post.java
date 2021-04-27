@@ -9,22 +9,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
  * @author miade
  */
 @Entity
+@Table(name = "posts")
+@NamedQuery(name = "Post.deleteAllRows", query = "DELETE FROM Post")
+        
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     
     @NotNull
     @Column(name = "title", length = 20)
@@ -37,22 +42,34 @@ public class Post implements Serializable {
     @Column(name = "dateCreated")
     private java.util.Date dateCreated;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST })
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 
     public Post() {}
 
-    public Post(String title, String text, Date dateCreated) {
+    public Post(User user, String text, String title){
+        this.id = id;
         this.title = title;
-        this.text = text;
-        this.dateCreated = dateCreated;
+        this.text = text; 
+        this.dateCreated = new Date();
+        this.user = user;
     }
     
-    public Long getId() {
+    // Bruges i PostFacadeTest
+    public Post(String text, String title, Date date){
+        this.title = title;
+        this.text = text;
+        this.dateCreated = new Date();
+        
+    }
+            
+    
+    
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

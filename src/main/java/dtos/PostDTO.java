@@ -10,34 +10,28 @@ import java.util.Date;
  */
 public class PostDTO {
     
-    private long id;
+    private int id;
     private String title;
     private String text;
-    private java.util.Date dateCreated;
+    private Date dateCreated;
     private String username;
 
     public PostDTO() {}
 
     public PostDTO(Post post) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.text = post.getText();
         this.dateCreated = post.getDateCreated();
         this.username = post.getUser().getUserName();
     }
     
-    // Til test:
-    public PostDTO(String title, String text, Date dateT, String username) {
-        this.title = title;
-        this.text = text;
-        this.dateCreated = dateT;
-        this.username = username;
-    }
-
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -72,36 +66,5 @@ public class PostDTO {
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
-    
-    
-    
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PostDTO other = (PostDTO) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
-    }
-    
-    
-    
-    
-    
     
 }

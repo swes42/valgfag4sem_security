@@ -11,16 +11,16 @@ import java.util.List;
  */
 public class PostsDTO {
     
-    List<PostDTO> all = new ArrayList();
+    List<PostDTO> allPosts = new ArrayList();
 
     public PostsDTO(List<Post> postEntities) {
         postEntities.forEach((p) -> {
-            all.add(new PostDTO(p));
+            allPosts.add(new PostDTO(p));
         });
     }
 
     public List<PostDTO> getAll() {
-        return all;
+        return allPosts ;
     }
     
     
