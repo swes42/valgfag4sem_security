@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.JOSEException;
 import dtos.PostDTO;
-import entities.Post;
 import errorhandling.MissingInput;
 import facades.PostFacade;
 import java.text.ParseException;
