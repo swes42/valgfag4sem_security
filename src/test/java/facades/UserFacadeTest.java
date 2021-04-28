@@ -40,9 +40,8 @@ public class UserFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM Post").executeUpdate();
-            em.createQuery("DELETE FROM User").executeUpdate();
-            em.createQuery("DELETE FROM Role").executeUpdate();
+            em.createQuery("delete from User").executeUpdate();
+            em.createQuery("delete from Role").executeUpdate();
             em.persist(new User("Username1", "password1"));
             em.persist(new User("Username2", "password2"));
             em.getTransaction().commit();
