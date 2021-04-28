@@ -46,11 +46,12 @@ public class PostResource {
     @Context
     SecurityContext securityContext;
     
-        @GET
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String demo() {
         return "{\"msg\":\"Hello World\"}";
     }
+    
     @POST	
     @RolesAllowed({"user", "admin"})
     @Consumes(MediaType.APPLICATION_JSON)

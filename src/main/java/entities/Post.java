@@ -50,7 +50,7 @@ public class Post implements Serializable {
     public Post() {
     }
 
-    public Post(String title, String text ,User user){
+    public Post(String title, String text, User user){
         this.title = title;
         this.text = text; 
         this.user = user;
@@ -58,7 +58,7 @@ public class Post implements Serializable {
     }
     
     // Bruges i PostFacadeTest
-    public Post(String text, String title, Date date){
+    public Post(String title, String text, Date date){
         this.title = title;
         this.text = text;
         this.dateCreated = new Date();

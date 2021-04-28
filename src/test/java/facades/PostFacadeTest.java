@@ -93,12 +93,25 @@ public class PostFacadeTest {
        PostDTO addedPost = facade.addPost("This is the title","This is the text", user.getUserName());
        assertNotNull(addedPost.getTitle());
     }
-//    @Test
-//    public void testAddPost() throws MissingInput {
-//       Post testPost = new Post("Im adding this post", "My username is Username1", new Date(System.currentTimeMillis()));
-//       PostDTO postDTO = new PostDTO(testPost);
-//       PostDTO addedPost = facade.addPost(postDTO, user.getUserName());
-//       assertTrue(addedPost.getId() != testPost.getId());
-//    }
+    
+    @Test
+    public void testAddPost2() throws MissingInput {
+        System.out.println("Tester addPost");
+        
+        String title = "Im adding this post";
+        String text = "My username is Username1";
+        Date dateT = new Date(System.currentTimeMillis());
+        
+        Post p = new Post(title, text, dateT);
+            p.setUser(user);
+        System.out.println("Her: " + p.getUser().getUserName());
+        
+        PostDTO result = facade.addPost(title, text, p.getUser().getUserName());
+        
+        PostDTO expResult = new PostDTO(1, title, text, p.getUser().getUserName());
+        
+        expResult.setId(expResult.getId());
+        assertEquals(expResult.getTitle(), result.getTitle());
+    }
     
 }
