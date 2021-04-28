@@ -13,26 +13,20 @@ public class PostDTO {
     private int id;
     private String title;
     private String text;
-    private Date dateCreated;
     private String username;
 
-    public PostDTO() {}
+    public PostDTO(int postID, String title, String text, String username) {
+        this.id = postID;
+        this.title = title;
+        this.text = text;
+        this.username = username;
+    }
 
     public PostDTO(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.text = post.getText();
-        this.dateCreated = post.getDateCreated();
         this.username = post.getUser().getUserName();
-    }
-    
-    public long getId() {
-        return id;
-    }
-
-    
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -57,14 +51,6 @@ public class PostDTO {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
     }
     
 }

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -42,17 +43,18 @@ public class Post implements Serializable {
     @Column(name = "dateCreated")
     private java.util.Date dateCreated;
 
+    @JoinColumn(name = "username")
     @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 
-    public Post() {}
+    public Post() {
+    }
 
-    public Post(User user, String text, String title){
-        this.id = id;
+    public Post(String title, String text ,User user){
         this.title = title;
         this.text = text; 
-        this.dateCreated = new Date();
         this.user = user;
+        this.dateCreated = new Date();
     }
     
     // Bruges i PostFacadeTest
@@ -62,8 +64,6 @@ public class Post implements Serializable {
         this.dateCreated = new Date();
         
     }
-            
-    
     
     public int getId() {
         return id;

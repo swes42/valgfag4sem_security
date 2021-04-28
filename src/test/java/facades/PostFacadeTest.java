@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Disabled;
 import utils.EMF_Creator;
 
 
-@Disabled
+//@Disabled
 
 public class PostFacadeTest {
     
@@ -56,13 +56,13 @@ public class PostFacadeTest {
         user = new User("user1", "pass1");
         admin = new User("admin1", "pass1");
         
-        Role r1 = new Role("user");
-        Role r2 = new Role("admin");
+//        Role r1 = new Role("user");
+//        Role r2 = new Role("admin");
         Post p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
         Post p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
         
-        user.addRole(r1);
-        admin.addRole(r2);
+//        user.addRole(r1);
+//        admin.addRole(r2);
         
         p1.setUser(user);
         p2.setUser(admin);
@@ -78,17 +78,27 @@ public class PostFacadeTest {
         }
     }
 
-    @AfterEach
-    public void tearDown() {
-//        Remove any data after each test was run
-    }
-
+//    @AfterEach
+//    public void tearDown() {
+//    EntityManager em = emf.createEntityManager();
+//    em.getTransaction().begin();
+//    em.createNativeQuery("truncate table posts").executeUpdate();
+//    em.createNativeQuery("truncate table users").executeUpdate();
+//    em.createNativeQuery("truncate table roles").executeUpdate();
+//    em.createNativeQuery("truncate table user_roles").executeUpdate();
+//    em.getTransaction().commit();    
+//    }
     @Test
     public void testAddPost() throws MissingInput {
-       Post testPost = new Post("Im adding this post", "My username is Username1", new Date(System.currentTimeMillis()));
-       PostDTO postDTO = new PostDTO(testPost);
-       PostDTO addedPost = facade.addPost(postDTO, user.getUserName());
-       assertTrue(addedPost.getId() != testPost.getId());
+       PostDTO addedPost = facade.addPost("This is the title","This is the text", user.getUserName());
+       assertNotNull(addedPost.getTitle());
     }
+//    @Test
+//    public void testAddPost() throws MissingInput {
+//       Post testPost = new Post("Im adding this post", "My username is Username1", new Date(System.currentTimeMillis()));
+//       PostDTO postDTO = new PostDTO(testPost);
+//       PostDTO addedPost = facade.addPost(postDTO, user.getUserName());
+//       assertTrue(addedPost.getId() != testPost.getId());
+//    }
     
 }

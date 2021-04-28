@@ -32,18 +32,19 @@ public class PostFacade {
     }
     
     
-    public PostDTO addPost(PostDTO pDTO, String username) throws MissingInput{
+    public PostDTO addPost(String title, String text, String username) throws MissingInput{
         EntityManager em = getEntityManager();
-        //checkFormMissingInput(title, text); // Jeg ved ikke hvorfor jeg ikke kan få lov at nævne metoden.
+        if ((title.length() == 0) || (text.length() == 0)){
+            throw new MissingInput("If you are gonne post a new post you need to "
+                    + "give it a title and write something.");
+        }        
         User user = em.find(User.class, username);
-        
-        Post post = new Post(user, pDTO.getText(), pDTO.getTitle());
+        Post post = new Post(title, text, user);
         
         try {
-            
             em.getTransaction().begin();
             em.persist(post);
-            em.getTransaction();
+            em.getTransaction().commit();
             return new PostDTO(post);
        
         } finally {

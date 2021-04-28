@@ -16,6 +16,7 @@ import java.text.ParseException;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -46,7 +47,11 @@ public class PostResource {
     @Context
     SecurityContext securityContext;
     
-    
+        @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String demo() {
+        return "{\"msg\":\"Hello World\"}";
+    }
     @POST	
     @RolesAllowed({"user", "admin"})
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,7 +59,7 @@ public class PostResource {
     public String addPost(String post, @HeaderParam("x-access-token") String token) throws MissingInput, ParseException, JOSEException, AuthenticationException {
         UserPrincipal user = JWT.getUserPrincipalFromTokenIfValid(token);
         PostDTO pDTO = GSON.fromJson(post, PostDTO.class);
-        PostDTO addPost = facade.addPost(pDTO, user.getName());
+        PostDTO addPost = facade.addPost(pDTO.getTitle(), pDTO.getText(), user.getName());
         return GSON.toJson(addPost);
     }
     
