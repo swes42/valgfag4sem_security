@@ -23,7 +23,10 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "posts")
-@NamedQuery(name = "Post.deleteAllRows", query = "DELETE FROM Post")
+@NamedQueries({
+    @NamedQuery(name = "Post.deleteAllRows", query = "DELETE FROM Post"),
+    @NamedQuery(name = "Post.getAllRows", query = "SELECT p from Post p")
+})
         
 public class Post implements Serializable {
 

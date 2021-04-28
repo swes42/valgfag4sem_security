@@ -81,7 +81,7 @@ public class PostFacade implements IPostFacade{
     public PostsDTO getAllPosts() {
         EntityManager em = getEntityManager();
         try {
-            return new PostsDTO(em.createNamedQuery("Person.getAllRows").getResultList());
+            return new PostsDTO(em.createNamedQuery("Post.getAllRows").getResultList());
         } finally{  
             em.close();
         }   

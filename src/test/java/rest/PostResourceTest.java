@@ -10,6 +10,7 @@ import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -117,6 +118,9 @@ public class PostResourceTest {
         given().when().get("/post").then().statusCode(200);
     }
     
+ // Fordi man skal logge ind for at adde en post er det svært bare at sætte en
+ // header på i test, så vi har testet det i Postman    
+    /*
     @Test
     public void testAddPost() throws AuthenticationException, API_Exception{
         System.out.println("---- Testing add post ----");
@@ -129,8 +133,54 @@ public class PostResourceTest {
             .when()
             .post("post")
             .then()
+            .header("x-access-token", NEED-TOKEN-FROM-LOGGEDIN )
             .body("title", equalTo("First Post"))
             .body("text", equalTo("Hello World!"))
             .body("username", equalTo("user1"));
     }
+    */
+    
+    @Test
+    public void getAllPosts(){
+        System.out.println("---- Testing getting all ----");
+        
+            List<PostDTO> postsDTOs;
+        
+            postsDTOs = given()
+                .contentType("application/json")
+                .when()
+                .get("/post/all")
+                .then()
+                .extract().body().jsonPath().getList("allPosts", PostDTO.class);
+            
+            List<String> resultTitles = new ArrayList();
+            
+            for (PostDTO p : postsDTOs){
+                resultTitles.add(p.getTitle());
+            }
+            
+            PostDTO p1DTO = new PostDTO(p1);
+            PostDTO p2DTO = new PostDTO(p2);
+            
+            assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle()));
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

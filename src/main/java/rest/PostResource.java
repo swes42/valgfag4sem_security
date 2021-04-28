@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.JOSEException;
 import dtos.PostDTO;
+import dtos.PostsDTO;
 import errorhandling.MissingInput;
 import facades.PostFacade;
 import java.text.ParseException;
@@ -63,5 +64,12 @@ public class PostResource {
         return GSON.toJson(addPost);
     }
     
+    @Path("all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllPosts() {
+        PostsDTO posts = facade.getAllPosts();
+        return GSON.toJson(posts);
+    }
     
 }

@@ -2,13 +2,18 @@
 package facades;
 
 import dtos.PostDTO;
+import dtos.PostsDTO;
 import entities.Post;
 import entities.Role;
 import entities.User;
 import errorhandling.MissingInput;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +31,7 @@ public class PostFacadeTest {
    private static EntityManagerFactory emf;
    private static PostFacade facade;
    private static User user, admin;
+   private static Post p1, p2;
    
    public PostFacadeTest (){}
 
@@ -58,8 +64,8 @@ public class PostFacadeTest {
         
 //        Role r1 = new Role("user");
 //        Role r2 = new Role("admin");
-        Post p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
-        Post p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
+        p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
+        p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
         
 //        user.addRole(r1);
 //        admin.addRole(r2);
@@ -96,7 +102,7 @@ public class PostFacadeTest {
     
     @Test
     public void testAddPost2() throws MissingInput {
-        System.out.println("Tester addPost");
+        System.out.println("---- Tester addPost ----");
         
         String title = "Im adding this post";
         String text = "My username is Username1";
@@ -104,7 +110,6 @@ public class PostFacadeTest {
         
         Post p = new Post(title, text, dateT);
             p.setUser(user);
-        System.out.println("Her: " + p.getUser().getUserName());
         
         PostDTO result = facade.addPost(title, text, p.getUser().getUserName());
         
@@ -114,4 +119,66 @@ public class PostFacadeTest {
         assertEquals(expResult.getTitle(), result.getTitle());
     }
     
+    
+    @Test
+    public void testGetAll() {
+        System.out.println("---- Tester getAll ----");
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        int expResult = 2;
+        PostsDTO result = pFac.getAllPosts();
+        
+        assertEquals(expResult, result.getAll().size());
+    }
+    
+    @Test
+    public void testGetAllContains() {
+        System.out.println("---- Tester getAll contains ----");
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        PostsDTO result = pFac.getAllPosts();
+        
+        PostDTO p1DTO = new PostDTO(p1);
+        PostDTO p2DTO = new PostDTO(p2);
+        
+        List<String> resultTitles = new ArrayList();
+        
+        for (PostDTO p : result.getAll()){
+            resultTitles.add(p.getTitle());
+        }
+        
+        assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle()));
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
