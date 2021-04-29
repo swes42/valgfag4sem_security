@@ -70,6 +70,9 @@ public class CoffeeRoomResourceTest {
         u2 = new User("Username2", "password2");
         try {
             em.getTransaction().begin();
+            //tilføjet for test skyld og se om det virker
+            em.createQuery("DELETE FROM Post").executeUpdate();
+
             em.createQuery("delete from User").executeUpdate();
             em.createQuery("delete from Role").executeUpdate();
             em.persist(u1);
