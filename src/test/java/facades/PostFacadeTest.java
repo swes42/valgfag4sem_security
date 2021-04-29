@@ -7,6 +7,7 @@ import entities.Post;
 import entities.Role;
 import entities.User;
 import errorhandling.MissingInput;
+import errorhandling.PostNotFound;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,7 @@ public class PostFacadeTest {
             em.createQuery("DELETE FROM Post").executeUpdate();
             em.createQuery("DELETE FROM User").executeUpdate();
             em.createQuery("DELETE FROM Role").executeUpdate();
+            em.createNativeQuery("alter table Posts AUTO_INCREMENT = 1").executeUpdate();
             
             
         user = new User("user1", "pass1");
@@ -154,6 +156,22 @@ public class PostFacadeTest {
         assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle()));
     }
 
+    
+    @Test
+    public void testDeletePost() throws PostNotFound {
+        System.out.println("---- Tester deletePost ----");
+        
+        int id = p2.getId();
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        PostDTO expResult = new PostDTO(p2);
+        PostDTO result = pFac.deletePost(id);
+        
+        assertEquals(expResult.getId(), result.getId());
+    }
+    
 }
 
 

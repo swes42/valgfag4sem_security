@@ -5,6 +5,7 @@ import dtos.PostsDTO;
 import entities.Post;
 import entities.User;
 import errorhandling.MissingInput;
+import errorhandling.PostNotFound;
 import errorhandling.UserNotFound;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +60,7 @@ public class PostFacade implements IPostFacade{
     }
     
     
-    private User getUserFromDB(EntityManager em, String username) throws UserNotFound {
+    public User getUserFromDB(EntityManager em, String username) throws UserNotFound {
         User user = em.find(User.class, username);
 
         if (user == null) {
@@ -87,5 +88,31 @@ public class PostFacade implements IPostFacade{
         }   
     }
     
+    
+    @Override
+    public PostDTO deletePost(int p_id) throws PostNotFound {
+         EntityManager em = getEntityManager();
+         
+          Post post = em.find(Post.class, p_id);
+          User user = post.getUser();
+          
+          if (post == null) {
+            throw new PostNotFound(String.format("Post with id: (%d) not found", p_id));
+          } else {
+                try {
+                    em.getTransaction().begin();
+                        em.remove(post);
+                     // Hvis flere har den samme addresse skal addressen ikke slettes
+                        user.getPosts().remove(post);
+                        if (user.getPosts().size() < 1){
+                            em.remove(user);
+                        }
+                    em.getTransaction().commit();
+                } finally {
+                    em.close();
+            }
+            return new PostDTO(post);
+          }
+    }
 
 }
