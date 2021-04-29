@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import security.LoginEndpoint;
 import security.errorhandling.AuthenticationException;
 //Uncomment the line below, to temporarily disable this test
-@Disabled
+//@Disabled
 public class PostResourceTest {
     
 
