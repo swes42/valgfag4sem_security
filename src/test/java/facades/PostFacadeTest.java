@@ -66,8 +66,8 @@ public class PostFacadeTest {
         
 //        Role r1 = new Role("user");
 //        Role r2 = new Role("admin");
-        p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
-        p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
+        p1 = new Post("p1", "p1", new Date(System.currentTimeMillis()));
+        p2 = new Post("p2", "p2", new Date(System.currentTimeMillis()));
         
 //        user.addRole(r1);
 //        admin.addRole(r2);
@@ -96,6 +96,7 @@ public class PostFacadeTest {
 //    em.createNativeQuery("truncate table user_roles").executeUpdate();
 //    em.getTransaction().commit();    
 //    }
+    
     @Test
     public void testAddPost() throws MissingInput {
        PostDTO addedPost = facade.addPost("This is the title","This is the text", user.getUserName());
@@ -172,6 +173,28 @@ public class PostFacadeTest {
         assertEquals(expResult.getId(), result.getId());
     }
     
+    
+    @Test
+    public void testEditPost() throws PostNotFound, MissingInput {
+        System.out.println("---- Tester editPost ----");
+        
+        PostDTO pDTO = new PostDTO(p1);
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        PostDTO expResult = new PostDTO(p1);
+    
+        expResult.setTitle("This is a new title!");
+    
+        
+        pDTO.setTitle("This is a new title!");
+    
+        
+        PostDTO result = pFac.editPost(pDTO);
+     
+        assertEquals(expResult.getTitle(), result.getTitle());
+    }
 }
 
 

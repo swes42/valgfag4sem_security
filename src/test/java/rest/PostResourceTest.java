@@ -198,6 +198,7 @@ public class PostResourceTest {
         assertThat(postDTOs, containsInAnyOrder(p2DTO, p3DTO));
             
     }
+    // Det samme gælder edit
 */
 
 }

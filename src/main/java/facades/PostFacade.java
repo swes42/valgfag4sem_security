@@ -114,5 +114,37 @@ public class PostFacade implements IPostFacade{
             return new PostDTO(post);
           }
     }
+    
+    
+ // Skal have testet om lastEdited virker - evt. med application test
+    @Override
+    public PostDTO editPost(PostDTO pDTO) throws PostNotFound, MissingInput {
+    
+        checkFormMissingInput(pDTO.getTitle(), pDTO.getText()); 
+        
+        EntityManager em = getEntityManager();
+        Post post = em.find(Post.class, pDTO.getId());
+        
+        
+        if (post == null) {
+                throw new PostNotFound(String.format("No post with provided id found", pDTO.getId()));
+        } else {
+            post.setTitle(pDTO.getTitle());
+            post.setText(pDTO.getText());
+            post.setLastEdited();
+            //post.setUser(pDTO.getUsername());
+            System.out.println("Post: " + post.getTitle() + ", " + post.getText());
+            try {
+                em.getTransaction().begin();
+                    em.merge(post);
+                em.getTransaction().commit();
+                
+                return new PostDTO(post);
+               
+            } finally {  
+            em.close();
+          }
+        }    
+    }
 
 }

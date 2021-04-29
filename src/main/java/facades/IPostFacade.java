@@ -19,6 +19,7 @@ public interface IPostFacade {
   public PostsDTO getAllPosts();  
   public PostDTO deletePost(int id) throws PostNotFound;
   
+  public PostDTO editPost(PostDTO p) throws PostNotFound, MissingInput;  
   /*
   public PersonDTO getPerson(int id) throws PersonNotFound; 
   public PersonsDTO getAllPersons();  

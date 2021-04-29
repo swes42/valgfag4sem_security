@@ -23,6 +23,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -91,6 +92,25 @@ public class PostResource {
         PostDTO pDeleted = facade.deletePost(id);
         pDeleted.setUsername(userP.getName());
         return GSON.toJson(pDeleted);
+    }
+    
+    @PUT
+    @RolesAllowed({"user", "admin"})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    public String editPost(@PathParam("id") int id, String post, @HeaderParam("x-access-token") String token) 
+            throws PostNotFound, MissingInput, ParseException, JOSEException, AuthenticationException {
+        
+        UserPrincipal userP = JWT.getUserPrincipalFromTokenIfValid(token);
+        
+        PostDTO postDTO = GSON.fromJson(post, PostDTO.class);
+        postDTO.setId(id);
+        PostDTO pEdit = facade.editPost(postDTO);
+        
+        pEdit.setUsername(userP.getName());
+        
+        return GSON.toJson(pEdit);
     }
     
 }
