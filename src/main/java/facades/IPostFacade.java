@@ -18,8 +18,9 @@ public interface IPostFacade {
   public PostDTO addPost(String title, String text, String username) throws MissingInput;    
   public PostsDTO getAllPosts();  
   public PostDTO deletePost(int id) throws PostNotFound;
-  
   public PostDTO editPost(PostDTO p) throws PostNotFound, MissingInput;  
+  
+  public PostsDTO getPostsByUser(String username);
   /*
   public PersonDTO getPerson(int id) throws PersonNotFound; 
   public PersonsDTO getAllPersons();  

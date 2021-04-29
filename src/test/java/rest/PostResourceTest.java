@@ -148,6 +148,31 @@ public class PostResourceTest {
             assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle(), p3DTO.getTitle()));
     }
     
+    @Test
+    public void getAllPostsByUser(){
+        System.out.println("---- Testing getting allPostsByUser ----");
+        
+            List<PostDTO> postsDTOs;
+        
+            postsDTOs = given()
+                .contentType("application/json")
+                .when()
+                .get("/post/" + user.getUserName() + "/all")
+                .then()
+                .extract().body().jsonPath().getList("allPosts", PostDTO.class);
+            
+            List<String> resultTitles = new ArrayList();
+            
+            for (PostDTO p : postsDTOs){
+                resultTitles.add(p.getTitle());
+            }
+            
+            PostDTO p1DTO = new PostDTO(p1);
+            PostDTO p3DTO = new PostDTO(p3);
+            
+            assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p3DTO.getTitle()));
+    }
+    
     // Fordi man skal logge ind for at adde en post og slette en post er det 
     // svært bare at sætte en header på i test, så vi har testet det i Postman    
     /*

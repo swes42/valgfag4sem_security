@@ -113,4 +113,11 @@ public class PostResource {
         return GSON.toJson(pEdit);
     }
     
+    @Path("{username}/all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllPosts(@PathParam("username") String username) {
+        PostsDTO posts = facade.getPostsByUser(username);
+        return GSON.toJson(posts);
+    }
 }

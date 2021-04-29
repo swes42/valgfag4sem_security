@@ -7,10 +7,12 @@ import entities.User;
 import errorhandling.MissingInput;
 import errorhandling.PostNotFound;
 import errorhandling.UserNotFound;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 
 public class PostFacade implements IPostFacade{
 
@@ -145,6 +147,32 @@ public class PostFacade implements IPostFacade{
             em.close();
           }
         }    
+    }
+    
+    
+    @Override
+    public PostsDTO getPostsByUser(String username){
+        
+        EntityManager em = getEntityManager();
+        
+        Query q = em.createNamedQuery("Post.getAllRowsByUser");
+        q.setParameter("username", username);
+        
+        // Laver en liste med alle posts:
+        List<Post> posts = q.getResultList();
+        
+        try {
+            
+            if (posts.size() == 0) {
+                 throw new PostNotFound("No posts posted yet!");
+             } 
+            
+        } catch (PostNotFound ex) {
+            Logger.getLogger(PostFacade.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            em.close();
+        }
+        return new PostsDTO(posts);
     }
 
 }

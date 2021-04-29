@@ -195,7 +195,35 @@ public class PostFacadeTest {
      
         assertEquals(expResult.getTitle(), result.getTitle());
     }
+    
+    @Test
+    public void testGetPostsByUser() {
+        System.out.println("---- Tester getPostsByUser ----");
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        String username = user.getUserName();
+        
+        List<Post> postList = user.getPosts();
+        
+        PostsDTO expList = new PostsDTO(postList);
+        PostsDTO result = pFac.getPostsByUser(username);
+        
+        List<String> expTitleList = new ArrayList();
+        for (PostDTO p : expList.getAll()){
+            expTitleList.add(p.getTitle());
+        }
+        List<String> resTitleList = new ArrayList();
+        for (PostDTO p : result.getAll()){
+            resTitleList.add(p.getTitle());
+        }
+        
+        assertEquals(expTitleList, resTitleList);
+    }
 }
+
+
 
 
 
