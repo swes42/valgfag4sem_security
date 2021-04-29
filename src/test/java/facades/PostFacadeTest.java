@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Disabled;
 import utils.EMF_Creator;
 
 
-//@Disabled
+@Disabled
 
 public class PostFacadeTest {
     

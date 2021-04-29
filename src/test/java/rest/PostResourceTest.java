@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import security.LoginEndpoint;
 import security.errorhandling.AuthenticationException;
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 public class PostResourceTest {
     
 
@@ -87,21 +87,21 @@ public class PostResourceTest {
             em.createQuery("DELETE FROM Role").executeUpdate();
             
             
-        user = new User("user1", "pass1");
-        admin = new User("admin1", "pass1");
-        
-//        Role r1 = new Role("user");
-//        Role r2 = new Role("admin");
-        p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
-        p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
-        p3 = new Post("Driving away", "Im driving to a resort!", new Date(System.currentTimeMillis()));
-        
-//        user.addRole(r1);
-//        admin.addRole(r2);
-        
-        p1.setUser(user);
-        p2.setUser(admin);
-        p3.setUser(user);
+            user = new User("user1", "pass1");
+            admin = new User("admin1", "pass1");
+
+    //        Role r1 = new Role("user");
+    //        Role r2 = new Role("admin");
+            p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
+            p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
+            p3 = new Post("Driving away", "Im driving to a resort!", new Date(System.currentTimeMillis()));
+
+    //        user.addRole(r1);
+    //        admin.addRole(r2);
+
+            p1.setUser(user);
+            p2.setUser(admin);
+            p3.setUser(user);
         
             em.persist(user);
             em.persist(admin);
