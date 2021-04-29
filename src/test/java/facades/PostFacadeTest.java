@@ -58,7 +58,7 @@ public class PostFacadeTest {
             em.createQuery("DELETE FROM Post").executeUpdate();
             em.createQuery("DELETE FROM User").executeUpdate();
             em.createQuery("DELETE FROM Role").executeUpdate();
-            em.createNativeQuery("alter table Posts AUTO_INCREMENT = 1").executeUpdate();
+           // em.createNativeQuery("alter table Posts AUTO_INCREMENT = 1").executeUpdate();
             
             
         user = new User("user1", "pass1");
