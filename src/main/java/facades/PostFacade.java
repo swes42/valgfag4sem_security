@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 
 public class PostFacade implements IPostFacade{
@@ -104,7 +105,7 @@ public class PostFacade implements IPostFacade{
                 try {
                     em.getTransaction().begin();
                         em.remove(post);
-                     // Hvis flere har den samme addresse skal addressen ikke slettes
+                     
                         user.getPosts().remove(post);
                         if (user.getPosts().size() < 1){
                             em.remove(user);

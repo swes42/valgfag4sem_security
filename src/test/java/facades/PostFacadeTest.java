@@ -116,7 +116,8 @@ public class PostFacadeTest {
         
         PostDTO result = facade.addPost(title, text, p.getUser().getUserName());
         
-        PostDTO expResult = new PostDTO(1, title, text, p.getUser().getUserName());
+        PostDTO expResult = new PostDTO(1, title, text, p.getUser().getUserName(), 
+            dateT, dateT);
         
         expResult.setId(expResult.getId());
         assertEquals(expResult.getTitle(), result.getTitle());

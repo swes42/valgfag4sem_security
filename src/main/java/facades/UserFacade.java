@@ -1,8 +1,10 @@
 package facades;
 
 import dtos.UserDTO;
+import entities.Post;
 import entities.Role;
 import entities.User;
+import errorhandling.PostNotFound;
 import security.errorhandling.MissingInputException;
 import security.errorhandling.UserAlreadyExistsException;
 import security.errorhandling.UserNotFoundException;
@@ -11,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import security.errorhandling.AuthenticationException;
 
@@ -95,38 +98,59 @@ public class UserFacade {
         }
         return new UserDTO(user);
     }
-        public void deleteUser(String username, String password) throws UserNotFoundException, AuthenticationException {
+        public void deleteUser(String username, String password) throws UserNotFoundException, AuthenticationException, PostNotFound {
         EntityManager em = getEntityManager();
         User user = instance.getVeryfiedUser(username, password);
         
         if (user == null || !user.verifyPassword(password)) {
             throw new UserNotFoundException(String.format("User with username: (%s) not found", user.getUserName()));
         }
-        try {
-            em.getTransaction().begin();
-           User u = em.find(User.class, user.getUserName());
-            em.remove(u);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
+        
+        User u = em.find(User.class, user.getUserName());
+        
+        List<Post> posts = u.getPosts();
+        if (posts.isEmpty()) {
+            throw new PostNotFound(String.format("User (%s) has no posts", username));
+        } else {
+            try {
+                em.getTransaction().begin();
+                Query q = em.createNamedQuery("Post.deleteAllRowsByUser");
+                q.setParameter("username", username);
+                for (Post p : posts){
+                    em.remove(p);
+                }
+                em.remove(u);
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
 //        return new UserDTO(user);
-
+        }
     }
-        public void deleteUserAdmin(String username) throws UserNotFoundException {
+        public void deleteUserAdmin(String username) throws UserNotFoundException, PostNotFound {
         EntityManager em = getEntityManager();
         User user = em.find(User.class, username);
         if (user == null) {
             throw new UserNotFoundException(String.format("User with username: (%s) not found", user.getUserName()));
         }
+            
+        List<Post> posts = user.getPosts();
         try {
             em.getTransaction().begin();
+
+            Query q = em.createNamedQuery("Post.deleteAllRowsByUser");
+            q.setParameter("username", username);
+            for (Post p : posts){
+                em.remove(p);
+            }
+
             em.remove(user);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
 //        return new UserDTO(user);
+        
 
     }
          public List<UserDTO> getAllUsers() {

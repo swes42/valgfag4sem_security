@@ -25,7 +25,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "posts")
 @NamedQueries({
     @NamedQuery(name = "Post.deleteAllRows", query = "DELETE FROM Post"),
-    @NamedQuery(name = "Post.getAllRows", query = "SELECT p from Post p"),
+    @NamedQuery(name = "Post.deleteAllRowsByUser", query = "DELETE FROM Post p WHERE p.user.userName LIKE :username"),
+    @NamedQuery(name = "Post.getAllRows", query = "SELECT p from Post p ORDER BY p.lastEdited DESC"),
     @NamedQuery(name = "Post.getAllRowsByUser", 
             query = "SELECT p from Post p WHERE p.user.userName LIKE :username")
 })

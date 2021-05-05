@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.UserDTO;
 import entities.User;
+import errorhandling.PostNotFound;
+import facades.PostFacade;
 import security.errorhandling.MissingInputException;
 import security.errorhandling.UserAlreadyExistsException;
 import security.errorhandling.UserNotFoundException;
@@ -35,6 +37,7 @@ public class UserResource {
     @Context
     private UriInfo context;
     private static final UserFacade facade = UserFacade.getUserFacade(EMF);
+    private static final PostFacade pfacade = PostFacade.getPostFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Context
@@ -105,8 +108,7 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("{username}")
     @RolesAllowed("user")
-
-    public String deleteUser(@PathParam("username") String username, String password) throws UserNotFoundException, AuthenticationException {
+    public String deleteUser(@PathParam("username") String username, String password) throws UserNotFoundException, AuthenticationException, PostNotFound {
         facade.deleteUser(username,password);
         return "{\"status\":\"deleted\"}";
     }
@@ -115,7 +117,7 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("admin/{username}")
     @RolesAllowed("admin")
-    public String deleteUserAdmin(@PathParam("username") String username) throws UserNotFoundException {
+    public String deleteUserAdmin(@PathParam("username") String username) throws UserNotFoundException, PostNotFound {
         facade.deleteUserAdmin(username);
         return "{\"status\":\"deleted\"}";
     }
