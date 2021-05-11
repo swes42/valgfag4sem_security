@@ -84,7 +84,7 @@ public class PostResource {
     @RolesAllowed({"user", "admin"})
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public String deletePerson(@PathParam("id") int id, @HeaderParam("x-access-token") String token) 
+    public String deletePost(@PathParam("id") int id, @HeaderParam("x-access-token") String token) 
             throws PostNotFound, ParseException, JOSEException, AuthenticationException {
         
         UserPrincipal userP = JWT.getUserPrincipalFromTokenIfValid(token);
@@ -99,12 +99,11 @@ public class PostResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")
-    public String editPost(@PathParam("id") int id, String post, @HeaderParam("x-access-token") String token) 
+    public String editPost(@PathParam("id") int id, String postID, @HeaderParam("x-access-token") String token) 
             throws PostNotFound, MissingInput, ParseException, JOSEException, AuthenticationException {
         
         UserPrincipal userP = JWT.getUserPrincipalFromTokenIfValid(token);
-        
-        PostDTO postDTO = GSON.fromJson(post, PostDTO.class);
+        PostDTO postDTO = GSON.fromJson(postID, PostDTO.class);
         postDTO.setId(id);
         PostDTO pEdit = facade.editPost(postDTO);
         

@@ -107,9 +107,11 @@ public class PostFacade implements IPostFacade{
                         em.remove(post);
                      
                         user.getPosts().remove(post);
+                        /*
                         if (user.getPosts().size() < 1){
                             em.remove(user);
                         }
+                        */
                     em.getTransaction().commit();
                 } finally {
                     em.close();
