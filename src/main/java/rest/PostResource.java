@@ -10,16 +10,22 @@ import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.JOSEException;
 import dtos.PostDTO;
 import dtos.PostsDTO;
+import entities.User;
 import errorhandling.MissingInput;
+import errorhandling.PostNotFound;
 import facades.PostFacade;
 import java.text.ParseException;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -57,7 +63,9 @@ public class PostResource {
     @RolesAllowed({"user", "admin"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addPost(String post, @HeaderParam("x-access-token") String token) throws MissingInput, ParseException, JOSEException, AuthenticationException {
+    public String addPost(String post, @HeaderParam("x-access-token") String token) 
+            throws MissingInput, ParseException, JOSEException, AuthenticationException {
+        
         UserPrincipal user = JWT.getUserPrincipalFromTokenIfValid(token);
         PostDTO pDTO = GSON.fromJson(post, PostDTO.class);
         PostDTO addPost = facade.addPost(pDTO.getTitle(), pDTO.getText(), user.getName());
@@ -72,4 +80,44 @@ public class PostResource {
         return GSON.toJson(posts);
     }
     
+    @DELETE
+    @RolesAllowed({"user", "admin"})
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String deletePerson(@PathParam("id") int id, @HeaderParam("x-access-token") String token) 
+            throws PostNotFound, ParseException, JOSEException, AuthenticationException {
+        
+        UserPrincipal userP = JWT.getUserPrincipalFromTokenIfValid(token);
+        
+        PostDTO pDeleted = facade.deletePost(id);
+        pDeleted.setUsername(userP.getName());
+        return GSON.toJson(pDeleted);
+    }
+    
+    @PUT
+    @RolesAllowed({"user", "admin"})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    public String editPost(@PathParam("id") int id, String post, @HeaderParam("x-access-token") String token) 
+            throws PostNotFound, MissingInput, ParseException, JOSEException, AuthenticationException {
+        
+        UserPrincipal userP = JWT.getUserPrincipalFromTokenIfValid(token);
+        
+        PostDTO postDTO = GSON.fromJson(post, PostDTO.class);
+        postDTO.setId(id);
+        PostDTO pEdit = facade.editPost(postDTO);
+        
+        pEdit.setUsername(userP.getName());
+        
+        return GSON.toJson(pEdit);
+    }
+    
+    @Path("{username}/all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllPosts(@PathParam("username") String username) {
+        PostsDTO posts = facade.getPostsByUser(username);
+        return GSON.toJson(posts);
+    }
 }

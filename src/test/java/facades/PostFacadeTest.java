@@ -7,6 +7,7 @@ import entities.Post;
 import entities.Role;
 import entities.User;
 import errorhandling.MissingInput;
+import errorhandling.PostNotFound;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,7 @@ public class PostFacadeTest {
             em.createQuery("DELETE FROM Post").executeUpdate();
             em.createQuery("DELETE FROM User").executeUpdate();
             em.createQuery("DELETE FROM Role").executeUpdate();
+           // em.createNativeQuery("alter table Posts AUTO_INCREMENT = 1").executeUpdate();
             
             
         user = new User("user1", "pass1");
@@ -64,8 +66,8 @@ public class PostFacadeTest {
         
 //        Role r1 = new Role("user");
 //        Role r2 = new Role("admin");
-        p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
-        p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
+        p1 = new Post("p1", "p1", new Date(System.currentTimeMillis()));
+        p2 = new Post("p2", "p2", new Date(System.currentTimeMillis()));
         
 //        user.addRole(r1);
 //        admin.addRole(r2);
@@ -94,6 +96,7 @@ public class PostFacadeTest {
 //    em.createNativeQuery("truncate table user_roles").executeUpdate();
 //    em.getTransaction().commit();    
 //    }
+    
     @Test
     public void testAddPost() throws MissingInput {
        PostDTO addedPost = facade.addPost("This is the title","This is the text", user.getUserName());
@@ -154,7 +157,73 @@ public class PostFacadeTest {
         assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle()));
     }
 
+    
+    @Test
+    public void testDeletePost() throws PostNotFound {
+        System.out.println("---- Tester deletePost ----");
+        
+        int id = p2.getId();
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        PostDTO expResult = new PostDTO(p2);
+        PostDTO result = pFac.deletePost(id);
+        
+        assertEquals(expResult.getId(), result.getId());
+    }
+    
+    
+    @Test
+    public void testEditPost() throws PostNotFound, MissingInput {
+        System.out.println("---- Tester editPost ----");
+        
+        PostDTO pDTO = new PostDTO(p1);
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        PostDTO expResult = new PostDTO(p1);
+    
+        expResult.setTitle("This is a new title!");
+    
+        
+        pDTO.setTitle("This is a new title!");
+    
+        
+        PostDTO result = pFac.editPost(pDTO);
+     
+        assertEquals(expResult.getTitle(), result.getTitle());
+    }
+    
+    @Test
+    public void testGetPostsByUser() {
+        System.out.println("---- Tester getPostsByUser ----");
+        
+        EntityManagerFactory _emf = null;
+        PostFacade pFac = PostFacade.getPostFacade(_emf);
+        
+        String username = user.getUserName();
+        
+        List<Post> postList = user.getPosts();
+        
+        PostsDTO expList = new PostsDTO(postList);
+        PostsDTO result = pFac.getPostsByUser(username);
+        
+        List<String> expTitleList = new ArrayList();
+        for (PostDTO p : expList.getAll()){
+            expTitleList.add(p.getTitle());
+        }
+        List<String> resTitleList = new ArrayList();
+        for (PostDTO p : result.getAll()){
+            resTitleList.add(p.getTitle());
+        }
+        
+        assertEquals(expTitleList, resTitleList);
+    }
 }
+
+
 
 
 

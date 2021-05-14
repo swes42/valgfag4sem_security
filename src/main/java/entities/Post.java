@@ -25,7 +25,9 @@ import javax.validation.constraints.NotNull;
 @Table(name = "posts")
 @NamedQueries({
     @NamedQuery(name = "Post.deleteAllRows", query = "DELETE FROM Post"),
-    @NamedQuery(name = "Post.getAllRows", query = "SELECT p from Post p")
+    @NamedQuery(name = "Post.getAllRows", query = "SELECT p from Post p"),
+    @NamedQuery(name = "Post.getAllRowsByUser", 
+            query = "SELECT p from Post p WHERE p.user.userName LIKE :username")
 })
         
 public class Post implements Serializable {
@@ -45,6 +47,9 @@ public class Post implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dateCreated")
     private java.util.Date dateCreated;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "lastEdited")
+    private Date lastEdited;
 
     @JoinColumn(name = "username")
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -58,6 +63,7 @@ public class Post implements Serializable {
         this.text = text; 
         this.user = user;
         this.dateCreated = new Date();
+        this.lastEdited = new Date();
     }
     
     // Bruges i PostFacadeTest
@@ -65,6 +71,7 @@ public class Post implements Serializable {
         this.title = title;
         this.text = text;
         this.dateCreated = new Date();
+        this.lastEdited = new Date();
         
     }
     
@@ -111,6 +118,14 @@ public class Post implements Serializable {
         } else {
             this.user = null;
         }
+    }
+
+    public Date getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited() {
+        this.lastEdited = new Date();
     }
    
 

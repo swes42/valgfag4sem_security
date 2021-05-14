@@ -40,7 +40,7 @@ public class PostResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Post p1,p2;
+    private static Post p1,p2,p3;
     private static User user, admin;
     private static LoginEndpoint loginEndpoint;
     
@@ -94,17 +94,20 @@ public class PostResourceTest {
 //        Role r2 = new Role("admin");
         p1 = new Post("First Post", "Hello World!", new Date(System.currentTimeMillis()));
         p2 = new Post("Got a cat!", "My cat is so sweet.", new Date(System.currentTimeMillis()));
+        p3 = new Post("Driving away", "Im driving to a resort!", new Date(System.currentTimeMillis()));
         
 //        user.addRole(r1);
 //        admin.addRole(r2);
         
         p1.setUser(user);
         p2.setUser(admin);
+        p3.setUser(user);
         
             em.persist(user);
             em.persist(admin);
             em.persist(p1);
             em.persist(p2);
+            em.persist(p3);
             
             em.getTransaction().commit();
         } finally {
@@ -117,28 +120,7 @@ public class PostResourceTest {
         System.out.println("---- Testing is server UP ----");
         given().when().get("/post").then().statusCode(200);
     }
-    
- // Fordi man skal logge ind for at adde en post er det svært bare at sætte en
- // header på i test, så vi har testet det i Postman    
-    /*
-    @Test
-    public void testAddPost() throws AuthenticationException, API_Exception{
-        System.out.println("---- Testing add post ----");
-        System.out.println(p1.getTitle());
-        System.out.println("");
-        
-        given()
-            .contentType(ContentType.JSON)
-            .body(new PostDTO(p1))
-            .when()
-            .post("post")
-            .then()
-            .header("x-access-token", NEED-TOKEN-FROM-LOGGEDIN )
-            .body("title", equalTo("First Post"))
-            .body("text", equalTo("Hello World!"))
-            .body("username", equalTo("user1"));
-    }
-    */
+   
     
     @Test
     public void getAllPosts(){
@@ -161,9 +143,88 @@ public class PostResourceTest {
             
             PostDTO p1DTO = new PostDTO(p1);
             PostDTO p2DTO = new PostDTO(p2);
+            PostDTO p3DTO = new PostDTO(p3);
             
-            assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle()));
+            assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p2DTO.getTitle(), p3DTO.getTitle()));
     }
+    
+    @Test
+    public void getAllPostsByUser(){
+        System.out.println("---- Testing getting allPostsByUser ----");
+        
+            List<PostDTO> postsDTOs;
+        
+            postsDTOs = given()
+                .contentType("application/json")
+                .when()
+                .get("/post/" + user.getUserName() + "/all")
+                .then()
+                .extract().body().jsonPath().getList("allPosts", PostDTO.class);
+            
+            List<String> resultTitles = new ArrayList();
+            
+            for (PostDTO p : postsDTOs){
+                resultTitles.add(p.getTitle());
+            }
+            
+            PostDTO p1DTO = new PostDTO(p1);
+            PostDTO p3DTO = new PostDTO(p3);
+            
+            assertThat(resultTitles, containsInAnyOrder(p1DTO.getTitle(), p3DTO.getTitle()));
+    }
+    
+    // Fordi man skal logge ind for at adde en post og slette en post er det 
+    // svært bare at sætte en header på i test, så vi har testet det i Postman    
+    /*
+    @Test
+    public void testAddPost() throws AuthenticationException, API_Exception{
+        System.out.println("---- Testing add post ----");
+        System.out.println(p1.getTitle());
+        System.out.println("");
+        
+        given()
+            .contentType(ContentType.JSON)
+            .body(new PostDTO(p1))
+            .when()
+            .post("post")
+            .then()
+            .header("x-access-token", NEED-TOKEN-FROM-LOGGEDIN )
+            .body("title", equalTo("First Post"))
+            .body("text", equalTo("Hello World!"))
+            .body("username", equalTo("user1"));
+    }
+
+    @Test
+      public void testDelete() throws Exception {
+        
+        PostDTO post = new PostDTO(p1);
+        
+        given()
+            .contentType("application/json")
+            .delete("/post/" + post.getId())
+            .then()
+            .assertThat()
+            .statusCode(HttpStatus.OK_200.getStatusCode());
+        
+        List<PostDTO> postDTOs;
+        
+        postDTOs = given()
+                .contentType("application/json")
+                .when()
+                .get("/post/all")
+                .then()
+                .extract().body().jsonPath().getList("allPosts", PostDTO.class);
+
+     
+
+        PostDTO p2DTO = new PostDTO(p2);
+        PostDTO p3DTO = new PostDTO(p3);
+
+        assertThat(postDTOs, containsInAnyOrder(p2DTO, p3DTO));
+            
+    }
+    // Det samme gælder edit
+*/
 
 }
 

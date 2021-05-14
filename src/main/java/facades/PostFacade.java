@@ -5,11 +5,14 @@ import dtos.PostsDTO;
 import entities.Post;
 import entities.User;
 import errorhandling.MissingInput;
+import errorhandling.PostNotFound;
 import errorhandling.UserNotFound;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 
 public class PostFacade implements IPostFacade{
 
@@ -59,7 +62,7 @@ public class PostFacade implements IPostFacade{
     }
     
     
-    private User getUserFromDB(EntityManager em, String username) throws UserNotFound {
+    public User getUserFromDB(EntityManager em, String username) throws UserNotFound {
         User user = em.find(User.class, username);
 
         if (user == null) {
@@ -87,5 +90,89 @@ public class PostFacade implements IPostFacade{
         }   
     }
     
+    
+    @Override
+    public PostDTO deletePost(int p_id) throws PostNotFound {
+         EntityManager em = getEntityManager();
+         
+          Post post = em.find(Post.class, p_id);
+          User user = post.getUser();
+          
+          if (post == null) {
+            throw new PostNotFound(String.format("Post with id: (%d) not found", p_id));
+          } else {
+                try {
+                    em.getTransaction().begin();
+                        em.remove(post);
+                     // Hvis flere har den samme addresse skal addressen ikke slettes
+                        user.getPosts().remove(post);
+                        if (user.getPosts().size() < 1){
+                            em.remove(user);
+                        }
+                    em.getTransaction().commit();
+                } finally {
+                    em.close();
+            }
+            return new PostDTO(post);
+          }
+    }
+    
+    
+ // Skal have testet om lastEdited virker - evt. med application test
+    @Override
+    public PostDTO editPost(PostDTO pDTO) throws PostNotFound, MissingInput {
+    
+        checkFormMissingInput(pDTO.getTitle(), pDTO.getText()); 
+        
+        EntityManager em = getEntityManager();
+        Post post = em.find(Post.class, pDTO.getId());
+        
+        
+        if (post == null) {
+                throw new PostNotFound(String.format("No post with provided id found", pDTO.getId()));
+        } else {
+            post.setTitle(pDTO.getTitle());
+            post.setText(pDTO.getText());
+            post.setLastEdited();
+            //post.setUser(pDTO.getUsername());
+            System.out.println("Post: " + post.getTitle() + ", " + post.getText());
+            try {
+                em.getTransaction().begin();
+                    em.merge(post);
+                em.getTransaction().commit();
+                
+                return new PostDTO(post);
+               
+            } finally {  
+            em.close();
+          }
+        }    
+    }
+    
+    
+    @Override
+    public PostsDTO getPostsByUser(String username){
+        
+        EntityManager em = getEntityManager();
+        
+        Query q = em.createNamedQuery("Post.getAllRowsByUser");
+        q.setParameter("username", username);
+        
+        // Laver en liste med alle posts:
+        List<Post> posts = q.getResultList();
+        
+        try {
+            
+            if (posts.size() == 0) {
+                 throw new PostNotFound("No posts posted yet!");
+             } 
+            
+        } catch (PostNotFound ex) {
+            Logger.getLogger(PostFacade.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            em.close();
+        }
+        return new PostsDTO(posts);
+    }
 
 }
