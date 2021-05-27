@@ -2,6 +2,7 @@
 package dtos;
 
 import entities.Avatar;
+import java.sql.Blob;
 
 /**
  *
@@ -11,8 +12,8 @@ public class AvatarDTO {
     
     private int id;
 //    private String avatarName;
-//    private byte[] avatarImage;
-    private String avatarImage;
+    private Blob avatarImage;
+//    private String avatarImage;
     private String username; // Er ikke sikker om der skal bruges et username til en Avatar eller ej.
 
 //    public AvatarDTO(int id, String avatarName, byte[] avatarImage, String username) {
@@ -22,7 +23,7 @@ public class AvatarDTO {
 //        this.username = username;
 //    }
     
-    public AvatarDTO(int id, String avatarImage, String username) {
+    public AvatarDTO(int id, Blob avatarImage, String username) {
         this.id = id;
 //        this.avatarName = avatarName;
         this.avatarImage = avatarImage;
@@ -52,21 +53,21 @@ public class AvatarDTO {
 //        this.avatarName = avatarName;
 //    }
 
-//    public byte[] getAvatarImage() {
-//        return avatarImage;
-//    }
-//
-//    public void setAvatarImage(byte[] avatarImage) {
-//        this.avatarImage = avatarImage;
-//    }
-
-    public String getAvatarImage() {
+    public Blob getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(String avatarImage) {
+    public void setAvatarImage(Blob avatarImage) {
         this.avatarImage = avatarImage;
     }
+
+//    public String getAvatarImage() {
+//        return avatarImage;
+//    }
+//
+//    public void setAvatarImage(String avatarImage) {
+//        this.avatarImage = avatarImage;
+//    }
 
     public String getUsername() {
         return username;

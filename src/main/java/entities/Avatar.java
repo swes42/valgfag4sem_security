@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,8 +41,8 @@ public class Avatar implements Serializable {
 //    private String avatarName;
     @NotNull
     @Column(name = "avatarImage", columnDefinition = "MEDIUMBLOB")
-    private String avatarImage;
-    // private byte[] avatarImage;
+    // private String avatarImage;
+    private Blob avatarImage;
 
     @JoinColumn(name = "username")
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -50,29 +51,29 @@ public class Avatar implements Serializable {
     public Avatar() {
     }
 
-//    public Avatar(String avatarName, byte[] avatarImage, User user) {
-//        this.avatarName = avatarName;
-//        this.avatarImage = avatarImage;
-//        this.user = user;
-//    }
-//    
-//    // Skal bruges i AvatarFacadeTest
-//    public Avatar(String avatarName, byte[] avatarImage){
-//        this.avatarName = avatarName;
-//        this.avatarImage = avatarImage;
-//    }
-    
-    public Avatar(String avatarImage, User user) {
-//        this.avatarName = avatarName;
+    public Avatar(Blob avatarImage, User user) {
+        // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
         this.user = user;
     }
     
     // Skal bruges i AvatarFacadeTest
-    public Avatar(String avatarImage){
-//        this.avatarName = avatarName;
+    public Avatar(Blob avatarImage){
+        // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
     }
+    
+//    public Avatar(String avatarImage, User user) {
+////        this.avatarName = avatarName;
+//        this.avatarImage = avatarImage;
+//        this.user = user;
+//    }
+//    
+//    // Skal bruges i AvatarFacadeTest
+//    public Avatar(String avatarImage){
+////        this.avatarName = avatarName;
+//        this.avatarImage = avatarImage;
+//    }
     
     public int getId() {
         return id;
@@ -90,21 +91,21 @@ public class Avatar implements Serializable {
 //        this.avatarName = avatarName;
 //    }
 
-//    public byte[] getAvatarImage() {
-//        return avatarImage;
-//    }
-//
-//    public void setAvatarImage(byte[] avatarImage) {
-//        this.avatarImage = avatarImage;
-//    }
-
-    public String getAvatarImage() {
+    public Blob getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(String avatarImage) {
+    public void setAvatarImage(Blob avatarImage) {
         this.avatarImage = avatarImage;
     }
+
+//    public String getAvatarImage() {
+//        return avatarImage;
+//    }
+//
+//    public void setAvatarImage(String avatarImage) {
+//        this.avatarImage = avatarImage;
+//    }
     
     public User getUser() {
         return user;

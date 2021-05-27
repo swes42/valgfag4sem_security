@@ -1,6 +1,5 @@
 package facades;
 
-//import com.sun.org.apache.xml.internal.security.utils.Base64;
 import dtos.AvatarDTO;
 import entities.Avatar;
 import entities.User;
@@ -9,12 +8,15 @@ import errorhandling.MissingInput;
 import errorhandling.UserNotFound;
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.sql.rowset.serial.SerialBlob;
 
 public class AvatarFacade implements IAvatarFacade {
 
@@ -55,13 +57,19 @@ public class AvatarFacade implements IAvatarFacade {
 //    }
 
     @Override
-    public AvatarDTO addAvatar(String avatarImage, String username) throws MissingInput {
+    public AvatarDTO addAvatar(Blob avatarImage, String username) throws MissingInput {
         EntityManager em = getEntityManager();
         
         User user = null;
         Avatar avatar = null;
         
+//        byte[] avatarByte;
+//        Blob avatarBlob;
+        
         try {
+//            avatarByte = Base64.decode(avatarImage);
+//            avatarBlob = new SerialBlob(avatarByte);
+            
             em.getTransaction().begin();
             user = getUserFromDB(em, username);
             avatar = new Avatar(avatarImage, user);
@@ -99,7 +107,7 @@ public class AvatarFacade implements IAvatarFacade {
     }
     
         @Override
-    public AvatarDTO updateAvatar(int a_id, String avatarImage, String username) throws AvatarNotFound, MissingInput {
+    public AvatarDTO updateAvatar(int a_id, Blob avatarImage, String username) throws AvatarNotFound, MissingInput {
         deleteAvatar(a_id);
         return addAvatar(avatarImage, username);
     }
