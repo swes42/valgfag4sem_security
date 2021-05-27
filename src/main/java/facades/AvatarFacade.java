@@ -109,13 +109,10 @@ public class AvatarFacade implements IAvatarFacade {
         EntityManager em = getEntityManager();
         
         System.out.println(username);
-        //Query q = em.createNamedQuery("Avatar.getAllRowsByUser");
+        Query q = em.createNamedQuery("Avatar.getAllRowsByUser");
+        q.setParameter("username", username);
         
-        Query test = em.createQuery("SELECT a FROM Avatar a WHERE a.user.userName LIKE :username");
-        test.setParameter("username", username);
-        System.out.println("test: " + test);
-        System.out.println("single result: " + test.getResultList());
-        Avatar avatar = (Avatar) test.getSingleResult();
+        Avatar avatar = (Avatar) q.getSingleResult();
         
         try {
             if (avatar == null) {
