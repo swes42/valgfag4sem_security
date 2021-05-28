@@ -60,7 +60,7 @@ public class AvatarDTO {
     public void setAvatarImage(Blob avatarImage) {
         this.avatarImage = avatarImage;
     }
-
+    
 //    public String getAvatarImage() {
 //        return avatarImage;
 //    }

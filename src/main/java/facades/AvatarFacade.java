@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,18 +117,26 @@ public class AvatarFacade implements IAvatarFacade {
     public AvatarDTO getAvatarByUser(String username) throws UserNotFound {
         EntityManager em = getEntityManager();
         
-        System.out.println(username);
         Query q = em.createNamedQuery("Avatar.getAllRowsByUser");
         q.setParameter("username", username);
         
         Avatar avatar = (Avatar) q.getSingleResult();
         
+//        Blob blob = avatar.getAvatarImage();
+//        
         try {
-            if (avatar == null) {
+            if (avatar.getAvatarImage() == null) {
                 throw new AvatarNotFound("No avatar/profile picture uploaded yet!");
             }
+//            int blobLength = (int) blob.length();
+//            byte[] blobAsBytes = blob.getBytes(1, blobLength);
+//            String avatarBase64 = Base64.getEncoder().encodeToString(blobAsBytes);
+//            
+            
         } catch (AvatarNotFound ex) {
             Logger.getLogger(AvatarFacade.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AvatarFacade.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             em.close();
         }

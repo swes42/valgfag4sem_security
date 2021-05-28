@@ -111,9 +111,14 @@ public class AvatarResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getAvatarByUser(@PathParam("username") String username) throws UserNotFound {
-        System.out.println("AAA");
         AvatarDTO avatar = facade.getAvatarByUser(username);
-        System.out.println("BBB");
+//        
+//        Blob blob = avatar.getAvatarImage();
+//        
+//        String s = GSON.toJson(avatar);
+//        Object obj = JSONValue.parse(s);
+//        JSONObject jsonObject = (JSONObject) obj;
+//        
         return GSON.toJson(avatar);
     }
     
