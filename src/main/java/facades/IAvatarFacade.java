@@ -12,8 +12,8 @@ import java.sql.Blob;
  * @author malthew
  */
 public interface IAvatarFacade {
-  public AvatarDTO addAvatar(Blob avatarImage, String username) throws MissingInput;
-  public AvatarDTO updateAvatar(int id, Blob avatarImage, String username) throws AvatarNotFound, MissingInput;
+  public AvatarDTO addAvatar(String avatarImage, String username) throws MissingInput;
+  public AvatarDTO updateAvatar(int id, String avatarImage, String username) throws AvatarNotFound, MissingInput;
   public AvatarDTO deleteAvatar(int id) throws AvatarNotFound;
   public AvatarDTO getAvatarByUser(String username) throws UserNotFound; 
 

@@ -12,7 +12,7 @@ public class AvatarDTO {
     
     private int id;
 //    private String avatarName;
-    private Blob avatarImage;
+    private String avatarImage;
 //    private String avatarImage;
     private String username; // Er ikke sikker om der skal bruges et username til en Avatar eller ej.
 
@@ -23,7 +23,7 @@ public class AvatarDTO {
 //        this.username = username;
 //    }
     
-    public AvatarDTO(int id, Blob avatarImage, String username) {
+    public AvatarDTO(int id, String avatarImage, String username) {
         this.id = id;
 //        this.avatarName = avatarName;
         this.avatarImage = avatarImage;
@@ -53,11 +53,11 @@ public class AvatarDTO {
 //        this.avatarName = avatarName;
 //    }
 
-    public Blob getAvatarImage() {
+    public String getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(Blob avatarImage) {
+    public void setAvatarImage(String avatarImage) {
         this.avatarImage = avatarImage;
     }
     

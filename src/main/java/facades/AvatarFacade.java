@@ -58,7 +58,7 @@ public class AvatarFacade implements IAvatarFacade {
 //    }
 
     @Override
-    public AvatarDTO addAvatar(Blob avatarImage, String username) throws MissingInput {
+    public AvatarDTO addAvatar(String avatarImage, String username) throws MissingInput {
         EntityManager em = getEntityManager();
         
         User user = null;
@@ -108,7 +108,7 @@ public class AvatarFacade implements IAvatarFacade {
     }
     
         @Override
-    public AvatarDTO updateAvatar(int a_id, Blob avatarImage, String username) throws AvatarNotFound, MissingInput {
+    public AvatarDTO updateAvatar(int a_id, String avatarImage, String username) throws AvatarNotFound, MissingInput {
         deleteAvatar(a_id);
         return addAvatar(avatarImage, username);
     }
