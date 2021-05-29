@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -66,7 +67,13 @@ public class AvatarFacade implements IAvatarFacade {
         
 //        byte[] avatarByte;
 //        Blob avatarBlob;
+        Query q = em.createNamedQuery("Avatar.getAllRows");
+        List<Avatar> avatars = q.getResultList();
+        List<String> usernameList = new ArrayList();
         
+        for (Avatar a: avatars){
+            usernameList.add(a.getUser().getUserName());
+        }
         try {
 //            avatarByte = Base64.decode(avatarImage);
 //            avatarBlob = new SerialBlob(avatarByte);
@@ -74,9 +81,13 @@ public class AvatarFacade implements IAvatarFacade {
             em.getTransaction().begin();
             user = getUserFromDB(em, username);
             avatar = new Avatar(avatarImage, user);
+            if (usernameList.contains(user.getUserName())){
+                System.out.println("User allready exists.");
+            } else {
+                em.persist(avatar);
+                em.getTransaction().commit(); 
+            }
             
-            em.persist(avatar);
-            em.getTransaction().commit();
             
         } catch (UserNotFound ex) {
             Logger.getLogger(AvatarFacade.class.getName()).log(Level.SEVERE, null, ex);

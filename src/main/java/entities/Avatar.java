@@ -42,7 +42,7 @@ public class Avatar implements Serializable {
 //    private String avatarName;
     @NotNull
 
-    @Column(name = "avatarImage", columnDefinition = "MEDIUMBLOB")
+    @Column(name = "avatarImage", columnDefinition = "MEDIUMTEXT")
      private String avatarImage;
 //    private Blob avatarImage;
 
