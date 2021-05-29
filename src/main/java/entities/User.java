@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -76,6 +77,9 @@ public class User implements Serializable {
   @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
   private List<Post> posts = new ArrayList();
   
+  @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+  private Avatar avatar;
+  
   public User() {}
 
    public boolean verifyPassword(String pw){
@@ -135,4 +139,13 @@ public class User implements Serializable {
             posts.add(post);
         }
     }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+    
 }

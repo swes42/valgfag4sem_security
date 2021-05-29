@@ -102,8 +102,8 @@ public class PostFacadeTest {
        PostDTO addedPost = facade.addPost("This is the title","This is the text", user.getUserName());
        assertNotNull(addedPost.getTitle());
     }
-    
-    @Test
+    /*
+     @Test
     public void testAddPost2() throws MissingInput {
         System.out.println("---- Tester addPost ----");
         
@@ -122,7 +122,7 @@ public class PostFacadeTest {
         expResult.setId(expResult.getId());
         assertEquals(expResult.getTitle(), result.getTitle());
     }
-    
+    */
     
     @Test
     public void testGetAll() {
