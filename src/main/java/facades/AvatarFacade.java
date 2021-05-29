@@ -18,6 +18,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.sql.rowset.serial.SerialBlob;
+import security.errorhandling.AuthenticationException;
+import security.errorhandling.UserNotFoundException;
 
 public class AvatarFacade implements IAvatarFacade {
 
@@ -58,7 +60,7 @@ public class AvatarFacade implements IAvatarFacade {
 //    }
 
     @Override
-    public AvatarDTO addAvatar(Blob avatarImage, String username) throws MissingInput {
+    public AvatarDTO addAvatar(byte[] avatarImage, String username) throws MissingInput {
         EntityManager em = getEntityManager();
         
         User user = null;
@@ -107,19 +109,56 @@ public class AvatarFacade implements IAvatarFacade {
         }
     }
     
-        @Override
-    public AvatarDTO updateAvatar(int a_id, Blob avatarImage, String username) throws AvatarNotFound, MissingInput {
+    public User temp(String username) throws AuthenticationException {
+        EntityManager em = emf.createEntityManager();
+        User user;
+        try {
+            user = em.find(User.class, username);
+            if (user == null) {
+                throw new AuthenticationException("This didn't work...");
+            }
+        } finally {
+            em.close();
+        }
+        return user;
+    }
+    
+    @Override
+    public AvatarDTO updateAvatar(int a_id, byte[] avatarImage, String username) throws AvatarNotFound, MissingInput {
         deleteAvatar(a_id);
         return addAvatar(avatarImage, username);
     }
 
     @Override
     public AvatarDTO getAvatarByUser(String username) throws UserNotFound {
-        EntityManager em = getEntityManager();
+        System.out.println("AAA");
+        try {
+            User testU = temp(username);
+            System.out.println("testU: " + testU.getUserName());
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(AvatarFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+        
+        
+        // Find user på username
+        // then find a by user
+        EntityManager em = getEntityManager();
+        User user = em.find(User.class, username);
+        if (user == null) {
+            System.out.println("WHAAAAAT?");
+        }
+                
+                
+                
+        Query b = em.createQuery("SELECT a.avatarImage FROM Avatar a WHERE a.user.userName =:username");
+        System.out.println("username: " + username);
+        b.setParameter("username", username);
+        System.out.println("b query: " + b.getResultList());
         Query q = em.createNamedQuery("Avatar.getAllRowsByUser");
         q.setParameter("username", username);
-        
+        System.out.println("BBB");
+        System.out.println(q.getResultList());
         Avatar avatar = (Avatar) q.getSingleResult();
         
 //        Blob blob = avatar.getAvatarImage();
@@ -132,7 +171,7 @@ public class AvatarFacade implements IAvatarFacade {
 //            byte[] blobAsBytes = blob.getBytes(1, blobLength);
 //            String avatarBase64 = Base64.getEncoder().encodeToString(blobAsBytes);
 //            
-            
+            System.out.println("CCC");
         } catch (AvatarNotFound ex) {
             Logger.getLogger(AvatarFacade.class.getName()).log(Level.SEVERE, null, ex);
 //        } catch (SQLException ex) {

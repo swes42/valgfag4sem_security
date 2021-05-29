@@ -86,10 +86,14 @@ public class AvatarResource {
         AvatarDTO aDTO = GSON.fromJson(avatar, AvatarDTO.class);
         
         String avatarString = (String) jsonObject.get("image");
-        byte[] avatarByte = Base64.getMimeDecoder().decode(avatarString);
-        Blob avatarBlob = new SerialBlob(avatarByte);
+        System.out.println("avatarString: " + avatarString);
+        //byte[] avatarByte = Base64.getMimeDecoder().decode(avatarString);
+        //Blob avatarBlob = new SerialBlob(avatarByte);
+        byte[] decodedBytes = Base64.getMimeDecoder().decode(avatarString);
+        String decodedString = new String(decodedBytes);
         
-        AvatarDTO addAvatar = facade.addAvatar(avatarBlob, user.getName());
+        System.out.println("decodedString: " + decodedString);
+        AvatarDTO addAvatar = facade.addAvatar(decodedBytes, user.getName());
         return GSON.toJson(addAvatar);
     }
     

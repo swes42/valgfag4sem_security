@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.Base64;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,9 +41,9 @@ public class Avatar implements Serializable {
 //    @Column(name = "avatarName", length = 20)
 //    private String avatarName;
     @NotNull
-    @Column(name = "avatarImage", columnDefinition = "MEDIUMBLOB")
+    @Column(name = "avatarImage")
     // private String avatarImage;
-    private Blob avatarImage;
+    private byte[] avatarImage;
 
     @JoinColumn(name = "username")
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -51,14 +52,14 @@ public class Avatar implements Serializable {
     public Avatar() {
     }
 
-    public Avatar(Blob avatarImage, User user) {
+    public Avatar(byte[] avatarImage, User user) {
         // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
         this.user = user;
     }
     
     // Skal bruges i AvatarFacadeTest
-    public Avatar(Blob avatarImage){
+    public Avatar(byte[] avatarImage){
         // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
     }
@@ -91,11 +92,11 @@ public class Avatar implements Serializable {
 //        this.avatarName = avatarName;
 //    }
 
-    public Blob getAvatarImage() {
+    public byte[] getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(Blob avatarImage) {
+    public void setAvatarImage(byte[] avatarImage) {
         this.avatarImage = avatarImage;
     }
 

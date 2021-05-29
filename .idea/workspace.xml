@@ -6,6 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="3751e3db-5129-4bb6-9813-7de0c8b1d162" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dtos/AvatarDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dtos/AvatarDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entities/Avatar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/Avatar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/facades/AvatarFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/facades/AvatarFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/facades/IAvatarFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/facades/IAvatarFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/rest/AvatarResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rest/AvatarResource.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +50,8 @@
       <workItem from="1620722818452" duration="6000" />
       <workItem from="1621924218612" duration="3000" />
       <workItem from="1621925619424" duration="39000" />
+      <workItem from="1622139910186" duration="600000" />
+      <workItem from="1622277360388" duration="7000" />
     </task>
     <servers />
   </component>

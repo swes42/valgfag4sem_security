@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
         resources.add(rest.AvatarResource.class);
         resources.add(rest.CoffeeRoomResource.class);
         resources.add(rest.PostResource.class);
+        resources.add(rest.TempR.class);
         resources.add(rest.UserResource.class);
         resources.add(security.JWTAuthenticationFilter.class);
         resources.add(security.LoginEndpoint.class);
