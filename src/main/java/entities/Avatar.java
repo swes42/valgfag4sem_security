@@ -41,9 +41,10 @@ public class Avatar implements Serializable {
 //    @Column(name = "avatarName", length = 20)
 //    private String avatarName;
     @NotNull
-    @Column(name = "avatarImage")
-    // private String avatarImage;
-    private byte[] avatarImage;
+
+    @Column(name = "avatarImage", columnDefinition = "MEDIUMBLOB")
+     private String avatarImage;
+//    private Blob avatarImage;
 
     @JoinColumn(name = "username")
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -52,14 +53,15 @@ public class Avatar implements Serializable {
     public Avatar() {
     }
 
-    public Avatar(byte[] avatarImage, User user) {
+    public Avatar(String avatarImage, User user) {
         // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
         this.user = user;
     }
     
     // Skal bruges i AvatarFacadeTest
-    public Avatar(byte[] avatarImage){
+
+    public Avatar(String avatarImage){
         // this.avatarName = avatarName;
         this.avatarImage = avatarImage;
     }
@@ -92,11 +94,11 @@ public class Avatar implements Serializable {
 //        this.avatarName = avatarName;
 //    }
 
-    public byte[] getAvatarImage() {
+    public String getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(byte[] avatarImage) {
+    public void setAvatarImage(String avatarImage) {
         this.avatarImage = avatarImage;
     }
 

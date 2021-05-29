@@ -13,7 +13,8 @@ public class AvatarDTO {
     
     private int id;
 //    private String avatarName;
-    private byte[] avatarImage;
+
+    private String avatarImage;
 //    private String avatarImage;
     private String username; // Er ikke sikker om der skal bruges et username til en Avatar eller ej.
 
@@ -24,7 +25,7 @@ public class AvatarDTO {
 //        this.username = username;
 //    }
     
-    public AvatarDTO(int id, byte[] avatarImage, String username) {
+    public AvatarDTO(int id, String avatarImage, String username) {
         this.id = id;
 //        this.avatarName = avatarName;
         this.avatarImage = avatarImage;
@@ -54,11 +55,11 @@ public class AvatarDTO {
 //        this.avatarName = avatarName;
 //    }
 
-    public byte[] getAvatarImage() {
+    public String getAvatarImage() {
         return avatarImage;
     }
 
-    public void setAvatarImage(byte[] avatarImage) {
+    public void setAvatarImage(String avatarImage) {
         this.avatarImage = avatarImage;
     }
     
