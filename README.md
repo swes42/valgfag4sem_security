@@ -3,7 +3,7 @@
 
 This is the backend to our security exam project.
 
-Frontend deployed link: http://coffeeroom.surge.sh/
+Frontend deployed link: https://coffeeroom.surge.sh/
 
 Backend deployed link: https://swes.me/security/
 
